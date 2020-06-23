@@ -234,7 +234,7 @@ if __name__ == '__main__':
     time.sleep(0.5)
 
     load_fpath = save_fpath
-    save_fpath = './data/article.csv'
+    save_fpath = './data/article_raw.csv'
     if not os.path.exists(save_fpath):
         crawler.crawl_article(load_fpath, save_fpath)
     time.sleep(0.5)
