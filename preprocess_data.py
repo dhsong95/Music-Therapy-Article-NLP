@@ -89,6 +89,23 @@ class PreprocessingArticle:
         self.dataframe['abstract'] = self.dataframe.abstract.str.strip()
         self.dataframe['abstract'] = self.dataframe.abstract.str.replace(r'[ \n\t][ \n\t]+', ' ')
 
+    def find_empty_values(self, columns):
+        """Wheter column in $columns is na or not. Make new column.
+
+        Args:
+            columns (list): list of column to check how many na values
+        Return:
+            column_na_freq (dict): column and number of na value.
+        """
+        column_na_freq = {column: 0 for column in columns}
+
+        for column in columns:
+            column_name = 'is_na_{}'.format(column)
+            self.dataframe[column_name] = self.dataframe[column].isna()
+            column_na_freq[column] = self.dataframe[column_name].sum()
+
+        return column_na_freq
+
     def save(self, fpath):
         """Save Dataframe Processed.
 
@@ -118,6 +135,12 @@ if __name__ == '__main__':
 
     preprocessor.preprocess_abstract()
     print(preprocessor.sample_item('abstract', 10))
+
+    column_na_freq = preprocessor.find_empty_values(['keyword', 'abstract'])
+    for k, v in column_na_freq.items():
+        print('{:10} has {:2d} empty values'.format(k, v))
+    print(preprocessor.sample_item('is_na_keyword', 10))
+    print(preprocessor.sample_item('is_na_abstract', 10))
 
     fpath = './data/article.csv'
     preprocessor.save(fpath)
