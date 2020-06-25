@@ -102,13 +102,19 @@ class EDA:
 
         Args:
         Return:
-            n_english_article (int): number of non article
+            n_no_abstract_article (int): number of non article
         """
         n_no_abstract_article = len(self.dataframe[self.dataframe.abstract == ''])
         self.dataframe = self.dataframe[~(self.dataframe.abstract == '')]
         return n_no_abstract_article
 
     def count_articles_language(self):
+        """Visualize the frequency of article based on language
+
+        Args:
+        Return:
+            language_freq (dict): language-frequency dictionary
+        """
         self.dataframe.language = self.dataframe.language.fillna('-')
 
         language_counts = self.dataframe.language.value_counts().sort_index()
@@ -124,6 +130,12 @@ class EDA:
         return language_freq
 
     def count_articles_year(self):
+        """Visualize the frequency of article based on year
+
+        Args:
+        Return:
+            year_freq (dict): year-frequency dictionary
+        """
         year_counts = self.dataframe.year.value_counts().sort_index()
 
         plt.figure(figsize=(16, 9))
@@ -137,6 +149,12 @@ class EDA:
         return year_freq
 
     def count_number_of_keyword(self):
+        """Visualize the frequency of number of keyword per article
+
+        Args:
+        Return:
+            n_keyword_freq (dict): number-frequency dictionary
+        """
         self.dataframe.keyword = self.dataframe.keyword.fillna('[]')
         self.dataframe.keyword = self.dataframe.keyword.apply(literal_eval)
         self.dataframe['n_keyword'] = self.dataframe.keyword.apply(len)
@@ -154,6 +172,12 @@ class EDA:
         return n_keyword_freq
 
     def count_length_of_abstract(self):
+        """Visualize the frequency of number of word in abstract(length) per article
+
+        Args:
+        Return:
+            len_abstract_freq (dict): number-frequency dictionary
+        """
         self.dataframe.abstract = self.dataframe.abstract.fillna('')
         self.dataframe['len_abstract'] = self.dataframe.abstract.apply(lambda x: len(x.split()))
 
@@ -171,6 +195,12 @@ class EDA:
 
 
     def save_data_for_nlp(self, fpath):
+        """Save Data for NLP
+
+        Args:
+            fpath (str): Save path
+        Return:
+        """
         _ = self.remove_duplicates()
         _ = self.remove_non_articles()
         _ = self.remove_english_articles()
