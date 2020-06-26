@@ -133,3 +133,11 @@ dmypy.json
 
 # MAC OSX File
 .DS_Store
+
+# Files and Directories to be ignored
+*.csv
+*.tsv
+*.ttc
+*.ttf
+backup/
+chromedriver
