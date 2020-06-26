@@ -128,17 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Static Directory(fonts)
-static/
-
-# Driver Directory
-driver/
-
 # VSCode Directory
 .vscode/
 
 # MAC OSX File
 .DS_Store
-
-# Data Directory
-data/
