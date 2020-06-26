@@ -232,5 +232,5 @@ if __name__ == '__main__':
 
     print(eda.count_length_of_abstract())
 
-    fpath = './data/keyword_abstract.csv'
+    fpath = './data/keyword-abstract.csv'
     eda.save_data_for_nlp(fpath)
