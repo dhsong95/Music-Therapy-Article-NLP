@@ -17,6 +17,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 class ArticleNLP:
+    """ Basic Natural Language Processing. 
+        Simple POS included by koNLPy
+
+    Args:
+        fpath (str): local path to load dataset
+    Return:
+    """
     def __init__(self, fpath):
         self.dataframe = pd.read_csv(fpath, encoding='utf-8')
         self.dataframe.keyword = self.dataframe.keyword.apply(literal_eval)
@@ -33,6 +40,12 @@ class ArticleNLP:
 
     
     def count_keyword(self):
+        """ Count number of keyword using collections.Counter
+
+        Args:
+        Return:
+            counter (Counter): counter for keywords
+        """
         keywords = list()
         for keyword in self.dataframe.keyword:
             keywords += keyword
@@ -42,6 +55,12 @@ class ArticleNLP:
         return counter
 
     def keyword_barplot(self, n=-1):
+        """ Draw Barplot based on frequency of keyword. Save to local.
+
+        Args:
+            n (int): number of most frequent keywords to be plotted.
+        Return:
+        """
         counter = self.count_keyword()
         if n != -1:
             keyword_freq = dict(counter.most_common(n))
@@ -57,6 +76,12 @@ class ArticleNLP:
         plt.savefig('./figure/keyword_barplot.png')
 
     def keyword_wordcloud(self, n):
+        """ Draw wordcloud based on frequency of keyword. Save to local.
+
+        Args:
+            n (int): number of most frequent keywords to be plotted.
+        Return:
+        """
         counter = self.count_keyword()
 
         plt.figure(figsize=(12, 12))
@@ -70,6 +95,12 @@ class ArticleNLP:
         plt.savefig('./figure/keyword_wordcloud.png')
     
     def keyword_year(self, n):
+        """ Draw heatmap based on frequency of keyword among years. Save to local.
+
+        Args:
+            n (int): number of most frequent keywords to be plotted.
+        Return:
+        """
         counter = self.count_keyword()
         keywords = [k for k, _ in counter.most_common(n)]
 
@@ -90,6 +121,12 @@ class ArticleNLP:
         plt.savefig('./figure/keyword_year.png')
 
     def keyword_cooccurence(self, n):
+        """ Draw heatmap based on frequency of keyword cooccurence. Save to local.
+
+        Args:
+            n (int): number of most frequent keywords to be plotted.
+        Return:
+        """
         counter = self.count_keyword()
         keywords = [k for k, _ in counter.most_common(n)]
 
@@ -109,6 +146,13 @@ class ArticleNLP:
         plt.savefig('./figure/keyword_cooccurence.png')
 
     def count_abstract(self):
+        """ Count number of noun in abstract using collections.Counter
+            KoNLPy to extract nouns
+
+        Args:
+        Return:
+            counter (Counter): counter for nouns
+        """
         nouns = list()
         for abstract in self.dataframe.abstract:
             for n in self.komoran.nouns(abstract):
@@ -118,6 +162,12 @@ class ArticleNLP:
         return counter 
 
     def abstract_wordcloud(self, n):
+        """ Draw wordcloud based on frequency of noun in abstract. Save to local.
+
+        Args:
+            n (int): number of most frequent nouns in abstract to be plotted.
+        Return:
+        """
         counter = self.count_abstract()
 
         plt.figure(figsize=(12, 12))
@@ -131,6 +181,13 @@ class ArticleNLP:
         plt.savefig('./figure/abstract_wordcloud.png')
 
     def abstract_year(self, n, keyword):
+        """ Draw heatmap based on frequency of nouns or keywords in abstract among years. Save to local.
+
+        Args:
+            n (int): number of most frequent words to be plotted.
+            keyword (bool): if True then use keyword else use nouns
+        Return:
+        """
         if keyword:
             counter = self.count_keyword()
         else:
@@ -155,6 +212,13 @@ class ArticleNLP:
         plt.savefig('./figure/abstract_year_{}.png'.format('keyword' if keyword else 'noun'))
 
     def abstract_cooccurence(self, n, keyword):
+        """ Draw heatmap based on frequency of nouns or keywords in abstract cooccurence. Save to local.
+
+        Args:
+            n (int): number of most frequent words to be plotted.
+            keyword (bool): if True then use keyword else use nouns
+        Return:
+        """
         if keyword:
             counter = self.count_keyword()
         else:
