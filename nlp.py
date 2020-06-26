@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 """
 Author: DHSong
-Date: 2020-06-22 (Last Modified)
+Date: 2020-06-26 (Last Modified)
 Objective: EDA. 
 """
 
@@ -28,6 +28,8 @@ class ArticleNLP:
 
         plt.rcParams['font.family'] = font_family
         plt.rcParams['font.size'] = 18
+
+        self.komoran = Komoran(userdic='./data/user_dic.tsv')
 
     
     def count_keyword(self):
@@ -107,10 +109,10 @@ class ArticleNLP:
         plt.savefig('./figure/keyword_cooccurence.png')
 
     def count_abstract(self):
-        komoran = Komoran()
         nouns = list()
         for abstract in self.dataframe.abstract:
-            nouns += komoran.nouns(abstract)
+            for n in self.komoran.nouns(abstract):
+                nouns.append(n) if len(n) > 1 else None
         
         counter = Counter(nouns)
         return counter 
@@ -136,8 +138,6 @@ class ArticleNLP:
 
         words = [k for k, _ in counter.most_common(n)]
 
-        komoran = Komoran()
-
         years = range(self.dataframe.year.min(), self.dataframe.year.max() + 1)
         df = pd.DataFrame(index=words, columns=years)
         df = df.fillna(0)
@@ -145,7 +145,7 @@ class ArticleNLP:
         for idx in tqdm(range(len(self.dataframe))):
             y = self.dataframe.loc[idx, 'year']
             abstracts = self.dataframe.loc[idx, 'abstract']
-            for noun in komoran.nouns(abstracts):
+            for noun in self.komoran.nouns(abstracts):
                 if noun in words:
                     df.loc[noun, y] = df.loc[noun, y] + 1
         
@@ -162,14 +162,12 @@ class ArticleNLP:
 
         words = [k for k, _ in counter.most_common(n)]
         
-        komoran = Komoran()
-
         df = pd.DataFrame(index=words, columns=words)
         df = df.fillna(0)
 
         for idx in tqdm(range(len(self.dataframe))):
             abstracts = self.dataframe.loc[idx, 'abstract']
-            nouns = komoran.nouns(abstracts)
+            nouns = self.komoran.nouns(abstracts)
             for src in words:
                 for dst in words:
                     if src in nouns and dst in nouns:
